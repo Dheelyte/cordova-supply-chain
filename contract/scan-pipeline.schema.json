@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aegis.local/contract/scan-pipeline.schema.json",
+  "title": "Aegis Forensic Scan Pipeline Contract",
+  "description": "Language-neutral schema for the forensic scan pipeline wire format. Mirrors src/lib/contract/scan.ts and backend/app/schemas/scan.py.",
+  "$defs": {
+    "Verdict": {
+      "type": "string",
+      "enum": ["PASS", "REVIEW", "FAIL"],
+      "description": ">=85 PASS, 60-84 REVIEW, <60 FAIL"
+    },
+    "VlmSeverity": {
+      "type": "string",
+      "enum": ["info", "warning", "critical"]
+    },
+    "ScanPipelineStage": {
+      "type": "string",
+      "enum": [
+        "normalization_complete",
+        "identify_complete",
+        "ela_complete",
+        "vlm_complete",
+        "consensus"
+      ]
+    },
+    "ElaRect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "w", "h", "intensity"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "w": { "type": "number", "minimum": 0, "maximum": 1 },
+        "h": { "type": "number", "minimum": 0, "maximum": 1 },
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "VlmFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "x", "y", "title", "detail", "severity"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 1 },
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "title": { "type": "string" },
+        "detail": { "type": "string" },
+        "severity": { "$ref": "#/$defs/VlmSeverity" }
+      }
+    },
+    "NormalizationPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "productName", "bbox", "normalizedImageUrl"],
+      "properties": {
+        "sessionId": { "type": "string" },
+        "productName": { "type": "string" },
+        "bbox": {
+          "type": "array",
+          "items": { "type": "number", "minimum": 0, "maximum": 1 },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Detected label bounding box, normalised [x, y, w, h]"
+        },
+        "normalizedImageUrl": { "type": "string" }
+      }
+    },
+    "IdentifyPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "productName", "confidence"],
+      "properties": {
+        "sessionId": { "type": "string" },
+        "productName": { "type": "string" },
+        "nafdacRegNumber": { "type": ["string", "null"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "referenceKey": { "type": ["string", "null"] }
+      }
+    },
+    "ElaPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "productName", "elaScore", "elaMap"],
+      "properties": {
+        "sessionId": { "type": "string" },
+        "productName": { "type": "string" },
+        "elaScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "elaMap": { "type": "array", "items": { "$ref": "#/$defs/ElaRect" } },
+        "heatmapImageUrl": { "type": "string" }
+      }
+    },
+    "VlmPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sessionId",
+        "productName",
+        "vlmScore",
+        "vlmFindings",
+        "referenceImage",
+        "referenceRegNumber",
+        "referenceAvailable"
+      ],
+      "properties": {
+        "sessionId": { "type": "string" },
+        "productName": { "type": "string" },
+        "vlmScore": {
+          "oneOf": [
+            { "type": "number", "minimum": 0, "maximum": 100 },
+            { "type": "null" }
+          ]
+        },
+        "vlmFindings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/VlmFinding" }
+        },
+        "referenceImage": { "type": ["string", "null"] },
+        "referenceRegNumber": { "type": ["string", "null"] },
+        "referenceAvailable": { "type": "boolean" }
+      }
+    },
+    "ScanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sessionId",
+        "productName",
+        "capturedAt",
+        "elaScore",
+        "vlmScore",
+        "consensusScore",
+        "verdict",
+        "elaMap",
+        "vlmFindings",
+        "summary",
+        "referenceImage",
+        "referenceAvailable"
+      ],
+      "properties": {
+        "sessionId": { "type": "string" },
+        "productName": { "type": "string" },
+        "batchId": { "type": "string" },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "elaScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "vlmScore": {
+          "oneOf": [
+            { "type": "number", "minimum": 0, "maximum": 100 },
+            { "type": "null" }
+          ]
+        },
+        "consensusScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "verdict": { "$ref": "#/$defs/Verdict" },
+        "elaMap": { "type": "array", "items": { "$ref": "#/$defs/ElaRect" } },
+        "vlmFindings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/VlmFinding" }
+        },
+        "summary": { "type": "string" },
+        "referenceImage": { "type": ["string", "null"] },
+        "referenceAvailable": { "type": "boolean" }
+      }
+    },
+    "ScanPipelineEvent": {
+      "type": "object",
+      "required": ["stage", "timestamp", "latencyMs", "payload"],
+      "properties": {
+        "stage": { "$ref": "#/$defs/ScanPipelineStage" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "latencyMs": { "type": "number", "minimum": 0 },
+        "payload": { "type": "object" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "stage": { "const": "normalization_complete" },
+            "payload": { "$ref": "#/$defs/NormalizationPayload" }
+          }
+        },
+        {
+          "properties": {
+            "stage": { "const": "identify_complete" },
+            "payload": { "$ref": "#/$defs/IdentifyPayload" }
+          }
+        },
+        {
+          "properties": {
+            "stage": { "const": "ela_complete" },
+            "payload": { "$ref": "#/$defs/ElaPayload" }
+          }
+        },
+        {
+          "properties": {
+            "stage": { "const": "vlm_complete" },
+            "payload": { "$ref": "#/$defs/VlmPayload" }
+          }
+        },
+        {
+          "properties": {
+            "stage": { "const": "consensus" },
+            "payload": { "$ref": "#/$defs/ScanResult" }
+          }
+        }
+      ]
+    },
+    "ScanErrorEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "timestamp", "failedStage", "message", "recoverable"],
+      "properties": {
+        "stage": { "const": "error" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "failedStage": {
+          "oneOf": [
+            { "$ref": "#/$defs/ScanPipelineStage" },
+            { "const": "upload" }
+          ]
+        },
+        "message": { "type": "string" },
+        "recoverable": { "type": "boolean" }
+      }
+    },
+    "ScanAcceptResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "acceptedAt"],
+      "properties": {
+        "sessionId": { "type": "string" },
+        "acceptedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "HealthResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "service", "version", "env", "time"],
+      "properties": {
+        "status": { "const": "ok" },
+        "service": { "type": "string" },
+        "version": { "type": "string" },
+        "env": { "type": "string" },
+        "time": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

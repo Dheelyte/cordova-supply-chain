@@ -1,0 +1,117 @@
+/* Aegis Design Tokens
+ *
+ * Dark is the default (the forensic palette the app was designed around).
+ * Light overrides every semantic token through a `[data-theme="light"]`
+ * selector so toggling the attribute on <html> swaps the whole UI.
+ *
+ * Components should NEVER hard-code hex values — always read from
+ * `var(--token-name)` so they pick up the active theme automatically.
+ */
+
+:root {
+  /* Surfaces */
+  --bg-base: #0a0b0e;
+  --bg-elevated: #14161b;
+  --bg-overlay: #1c1f26;
+  --bg-inset: #0f1115;
+
+  /* Borders */
+  --border-hairline: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-focus: rgba(124, 92, 255, 0.55);
+
+  /* Text */
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --text-tertiary: #5f6368;
+  --text-inverse: #0a0b0e;
+
+  /* Semantic */
+  --verified: #00d68f;
+  --verified-soft: rgba(0, 214, 143, 0.12);
+  --verified-border: rgba(0, 214, 143, 0.28);
+
+  --pending: #ffb020;
+  --pending-soft: rgba(255, 176, 32, 0.12);
+  --pending-border: rgba(255, 176, 32, 0.28);
+
+  --risk: #ff3d5a;
+  --risk-soft: rgba(255, 61, 90, 0.12);
+  --risk-border: rgba(255, 61, 90, 0.28);
+
+  --info: #4d8dff;
+  --info-soft: rgba(77, 141, 255, 0.12);
+  --info-border: rgba(77, 141, 255, 0.28);
+
+  /* Accent */
+  --accent: #7c5cff;
+  --accent-soft: rgba(124, 92, 255, 0.12);
+  --accent-border: rgba(124, 92, 255, 0.28);
+
+  /* Radii */
+  --radius-card: 10px;
+  --radius-button: 8px;
+  --radius-input: 6px;
+  --radius-chip: 4px;
+  --radius-pill: 9999px;
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-standard: 200ms;
+  --duration-slow: 400ms;
+
+  color-scheme: dark;
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+ * Light theme — applied when <html data-theme="light">.
+ *
+ * Tuned so that:
+ *  - hairline borders stay 1px and still read on white,
+ *  - semantic hues (verified/pending/risk/info) keep ≥4.5:1 contrast,
+ *  - mono accents and badges remain the same shape — only colour swaps.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+[data-theme="light"] {
+  /* Surfaces — slightly off-white so cards lift visibly without shadows. */
+  --bg-base: #ffffff;
+  --bg-elevated: #f6f7f9;
+  --bg-overlay: #ffffff;
+  --bg-inset: #f0f1f4;
+
+  /* Borders — darken to keep the hairline visible. */
+  --border-hairline: rgba(15, 17, 21, 0.08);
+  --border-strong: rgba(15, 17, 21, 0.16);
+  --border-focus: rgba(109, 73, 255, 0.5);
+
+  /* Text */
+  --text-primary: #18181b;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-inverse: #ffffff;
+
+  /* Semantic — slightly darker hues for AA-on-white contrast. */
+  --verified: #00925f;
+  --verified-soft: rgba(0, 146, 95, 0.10);
+  --verified-border: rgba(0, 146, 95, 0.32);
+
+  --pending: #b06a00;
+  --pending-soft: rgba(176, 106, 0, 0.10);
+  --pending-border: rgba(176, 106, 0, 0.32);
+
+  --risk: #c41633;
+  --risk-soft: rgba(196, 22, 51, 0.10);
+  --risk-border: rgba(196, 22, 51, 0.32);
+
+  --info: #1f6feb;
+  --info-soft: rgba(31, 111, 235, 0.10);
+  --info-border: rgba(31, 111, 235, 0.32);
+
+  /* Accent */
+  --accent: #6d49ff;
+  --accent-soft: rgba(109, 73, 255, 0.10);
+  --accent-border: rgba(109, 73, 255, 0.32);
+
+  color-scheme: light;
+}

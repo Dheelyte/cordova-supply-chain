@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" width="400" height="280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f3eedf"/>
+      <stop offset="100%" stop-color="#e6dfc7"/>
+    </linearGradient>
+    <pattern id="dots" patternUnits="userSpaceOnUse" width="6" height="6">
+      <circle cx="1" cy="1" r="0.5" fill="#c2b896" opacity="0.6"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="280" rx="10" fill="url(#bg)"/>
+  <rect x="0" y="0" width="400" height="280" rx="10" fill="url(#dots)"/>
+  <!-- Top brand bar -->
+  <rect x="0" y="0" width="400" height="36" fill="#a83838"/>
+  <text x="20" y="24" font-family="Inter, system-ui" font-size="16" font-weight="700" fill="#fff">Coartem</text>
+  <text x="380" y="24" text-anchor="end" font-family="Inter, system-ui" font-size="11" font-weight="500" fill="#fff" opacity="0.85">artemether / lumefantrine</text>
+  <!-- Strength -->
+  <rect x="20" y="60" width="100" height="34" rx="4" fill="#a83838"/>
+  <text x="70" y="83" text-anchor="middle" font-family="Inter, system-ui" font-size="14" font-weight="700" fill="#fff">80 / 480 mg</text>
+  <!-- Tagline -->
+  <text x="20" y="116" font-family="Inter, system-ui" font-size="11" font-weight="500" fill="#5a4a2d">For uncomplicated Plasmodium falciparum malaria</text>
+  <!-- Tablet illustration -->
+  <g transform="translate(220, 110)">
+    <ellipse cx="40" cy="20" rx="38" ry="14" fill="#fff" stroke="#bdb195"/>
+    <line x1="2" y1="20" x2="78" y2="20" stroke="#bdb195"/>
+    <ellipse cx="40" cy="42" rx="38" ry="14" fill="#fff" stroke="#bdb195"/>
+    <line x1="2" y1="42" x2="78" y2="42" stroke="#bdb195"/>
+  </g>
+  <!-- Batch/expiry block -->
+  <rect x="20" y="220" width="170" height="44" rx="4" fill="#fff" stroke="#bdb195"/>
+  <text x="28" y="236" font-family="JetBrains Mono, monospace" font-size="9" fill="#7a6e4f">BATCH</text>
+  <text x="28" y="250" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#3a2c10">LP-COART-2026-001</text>
+  <text x="120" y="236" font-family="JetBrains Mono, monospace" font-size="9" fill="#7a6e4f">EXP</text>
+  <text x="120" y="250" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#3a2c10">03 / 2028</text>
+  <!-- NAFDAC mark -->
+  <rect x="210" y="220" width="170" height="44" rx="4" fill="#a83838"/>
+  <text x="220" y="237" font-family="Inter, system-ui" font-size="10" font-weight="600" fill="#fff">NAFDAC REG</text>
+  <text x="220" y="255" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" fill="#fff">04-1284</text>
+  <!-- Seal -->
+  <circle cx="370" cy="186" r="14" fill="none" stroke="#a83838" stroke-width="1.5"/>
+  <text x="370" y="190" text-anchor="middle" font-family="Inter, system-ui" font-size="8" font-weight="600" fill="#a83838">RX</text>
+</svg>
